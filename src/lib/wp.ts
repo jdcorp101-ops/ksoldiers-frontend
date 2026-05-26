@@ -128,7 +128,21 @@ export function isPublicCategory(c: { slug: string; count?: number | null }): bo
   return c.slug !== 'uncategorized' && (c.count ?? 0) > 0;
 }
 
-export const getPostBySlug = cache(async (slug: string): Promise<WPPost | null> => {
+// Next.js 16에서 dynamic segment params가 호출 위치(generateMetadata vs page)별로
+// percent-encoded인 채로 들어오기도 한다. WPGraphQL은 raw 한글 slug로 매칭하므로
+// 항상 decode한 형태로 정규화한다.
+export function normalizeSlug(raw: string): string {
+  if (typeof raw !== 'string') return raw;
+  if (!raw.includes('%')) return raw;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+export const getPostBySlug = cache(async (rawSlug: string): Promise<WPPost | null> => {
+  const slug = normalizeSlug(rawSlug);
   const data = await fetchGraphQL<{ post: WPPost | null }>(`
     ${POST_CARD_FRAGMENT}
     query GetPostBySlug($id: ID!) {

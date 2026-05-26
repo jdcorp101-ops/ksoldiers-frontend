@@ -5,6 +5,7 @@ import {
   fetchGraphQL,
   getAllCategorySlugs,
   getCategories,
+  normalizeSlug,
   POST_CARD_FRAGMENT,
   type WPPost,
   type WPPosts,
@@ -39,10 +40,11 @@ type CategoryPageResponse = {
 const POSTS_PER_PAGE = 12;
 
 const getCategoryData = cache(async (
-  slug: string,
+  rawSlug: string,
   after: string | null,
   before: string | null
 ): Promise<CategoryPageResponse | null> => {
+  const slug = normalizeSlug(rawSlug);
   try {
     return await fetchGraphQL<CategoryPageResponse>(
       `
