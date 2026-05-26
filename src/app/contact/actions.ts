@@ -72,14 +72,14 @@ export async function submitContact(
       replyTo: email,
       subject: `[ksoldiers 문의] ${name}`,
       html: `
-        <div style="font-family:-apple-system,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#38312B">
+        <div style="font-family:-apple-system,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#131A23">
           <h2 style="margin:0 0 16px;font-size:18px">ksoldiers 새 문의</h2>
           <table style="width:100%;border-collapse:collapse;font-size:14px">
-            <tr><td style="padding:8px 0;color:#8A817A;width:80px">이름</td><td style="padding:8px 0">${safeName}</td></tr>
-            <tr><td style="padding:8px 0;color:#8A817A">이메일</td><td style="padding:8px 0"><a href="mailto:${safeEmail}" style="color:#D4AB95">${safeEmail}</a></td></tr>
+            <tr><td style="padding:8px 0;color:#6B7886;width:80px">이름</td><td style="padding:8px 0">${safeName}</td></tr>
+            <tr><td style="padding:8px 0;color:#6B7886">이메일</td><td style="padding:8px 0"><a href="mailto:${safeEmail}" style="color:#3B6FA8">${safeEmail}</a></td></tr>
           </table>
-          <div style="margin-top:16px;padding:16px;background:#FAF9F6;border-radius:8px;line-height:1.7;font-size:14px;white-space:pre-wrap">${safeMessage}</div>
-          <p style="margin-top:24px;font-size:12px;color:#8A817A">이 메일에 회신하면 ${safeEmail}로 직접 답장됩니다.</p>
+          <div style="margin-top:16px;padding:16px;background:#F6F8FB;border-radius:8px;line-height:1.7;font-size:14px;white-space:pre-wrap">${safeMessage}</div>
+          <p style="margin-top:24px;font-size:12px;color:#6B7886">이 메일에 회신하면 ${safeEmail}로 직접 답장됩니다.</p>
         </div>
       `,
       text: `ksoldiers 새 문의\n\n이름: ${name}\n이메일: ${email}\n\n${message}\n\n— 회신: ${email}`,

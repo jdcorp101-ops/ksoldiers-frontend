@@ -64,7 +64,7 @@ const INTENT_OPTIONS: { value: IntentValue; label: string }[] = [
 const SERP_MAX_LEN = 3000;
 
 function ScoreBlock({ label, value }: { label: string; value: number }) {
-  const color = value >= 80 ? '#3F8E3F' : value >= 60 ? '#C26A4D' : '#C04848';
+  const color = value >= 80 ? '#3F8E3F' : value >= 60 ? '#D6840F' : '#C04848';
   return (
     <div style={{ minWidth: 70 }}>
       <div style={{ fontSize: 11, color: '#888' }}>{label}</div>
@@ -296,7 +296,7 @@ export default function DraftForm({ categories }: { categories: WPCategory[] }) 
             </div>
 
             {review.status === 'success' && (
-              <div style={{ marginTop: 16, padding: 12, background: '#FAF9F6', borderRadius: 6, border: '1px solid #EAE2DB' }}>
+              <div style={{ marginTop: 16, padding: 12, background: '#F6F8FB', borderRadius: 6, border: '1px solid #DCE2EA' }}>
                 <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 12 }}>
                   <ScoreBlock label="전체" value={review.data.scoreOverall} />
                   <ScoreBlock label="SEO" value={review.data.scoreSEO} />
