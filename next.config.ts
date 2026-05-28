@@ -22,6 +22,19 @@ const nextConfig: NextConfig = {
     ],
     qualities: [75, 90],
   },
+  async headers() {
+    return [
+      // staging/vercel.app 도메인에서만 noindex — ksoldiers.com 본도메인은 영향 없음.
+      // 컷오버 후 ksoldiers.com이 이 배포로 와도 host 매칭 안 되니 그대로 안전.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: '(.+\\.)?vercel\\.app' }],
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // WP /category/<en>/ → 새 구조 /blog/category/<en>/
