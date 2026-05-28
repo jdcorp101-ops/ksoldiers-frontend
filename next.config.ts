@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-// TODO(ksoldiers): WP 이미지 호스트 확정 후 hostname 정확히 지정.
-// ksoldiers.com이 cafe24 별칭이면 실제 cafe24 호스트(예: ksoldiers.mycafe24.com)도 추가.
 const nextConfig: NextConfig = {
   trailingSlash: true,
   turbopack: {
@@ -9,9 +7,16 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      // 컷오버 전: WP 백엔드가 ksoldiers.com에서 이미지 서빙
       {
         protocol: 'https',
         hostname: 'ksoldiers.com',
+        pathname: '/**',
+      },
+      // 컷오버 후: WP 백엔드 새 호스트 (Cafe24 기본 서브도메인)
+      {
+        protocol: 'https',
+        hostname: 'gigun0.mycafe24.com',
         pathname: '/**',
       },
       {
