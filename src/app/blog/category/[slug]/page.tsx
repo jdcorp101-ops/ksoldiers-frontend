@@ -96,7 +96,7 @@ const getCategoryData = cache(async (
 });
 
 function buildCanonical(slug: string, after: string, before: string): string {
-  const base = `/blog/category/${slug}`;
+  const base = `/blog/category/${slug}/`;
   if (!after && !before) return base;
   const sp = new URLSearchParams();
   if (after) sp.set('after', after);

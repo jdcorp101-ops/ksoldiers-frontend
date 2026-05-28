@@ -22,7 +22,7 @@ function PostMeta({ date, size = 'md' }: { date: string; size?: 'md' | 'lg' }) {
 
 export default function PostCard({ post, variant = 'default', priority = false, sizes }: Props) {
   const category = post.categories?.nodes?.[0];
-  const href = `/blog/${post.slug}`;
+  const href = `/blog/${post.slug}/`;
 
   if (variant === 'list') {
     return (

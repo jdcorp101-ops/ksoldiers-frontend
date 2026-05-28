@@ -8,7 +8,7 @@ const SOURCE_FALLBACK = 'ksoldiers';
 export function HeroCard({ post }: { post: WPPost }) {
   const source = post.categories?.nodes?.[0]?.name || SOURCE_FALLBACK;
   return (
-    <Link href={`/blog/${post.slug}`} className="m-hero-card">
+    <Link href={`/blog/${post.slug}/`} className="m-hero-card">
       <div className="m-hero-card-image">
         {isRecent(post.date) && <span className="m-badge-new">NEW</span>}
         <PostImage post={post} sizes="(max-width: 480px) 100vw, 480px" />
@@ -25,7 +25,7 @@ export function HeroCard({ post }: { post: WPPost }) {
 export function ListCard({ post }: { post: WPPost }) {
   const source = post.categories?.nodes?.[0]?.name || SOURCE_FALLBACK;
   return (
-    <Link href={`/blog/${post.slug}`} className="m-list-card">
+    <Link href={`/blog/${post.slug}/`} className="m-list-card">
       <div className="m-list-card-thumb">
         <PostImage post={post} sizes="88px" />
       </div>
@@ -41,7 +41,7 @@ export function ListCard({ post }: { post: WPPost }) {
 export function PcHeroLarge({ post }: { post: WPPost }) {
   const source = post.categories?.nodes?.[0]?.name || SOURCE_FALLBACK;
   return (
-    <Link href={`/blog/${post.slug}`} className="m-pc-hero-large">
+    <Link href={`/blog/${post.slug}/`} className="m-pc-hero-large">
       <div className="m-pc-hero-large-image">
         {isRecent(post.date) && <span className="m-badge-new">NEW</span>}
         <PostImage post={post} sizes="(min-width: 1024px) 720px, 100vw" />
@@ -58,7 +58,7 @@ export function PcHeroLarge({ post }: { post: WPPost }) {
 export function GridCard({ post }: { post: WPPost }) {
   const source = post.categories?.nodes?.[0]?.name || SOURCE_FALLBACK;
   return (
-    <Link href={`/blog/${post.slug}`} className="m-grid-card">
+    <Link href={`/blog/${post.slug}/`} className="m-grid-card">
       <div className="m-grid-card-image">
         <PostImage
           post={post}

@@ -27,12 +27,12 @@ export async function generateMetadata({
   const hasFilter = Boolean(params?.search || params?.category);
   const hasPagination = Boolean(params?.after || params?.before);
 
-  let canonical = '/blog';
+  let canonical = '/blog/';
   if (hasPagination) {
     const sp = new URLSearchParams();
     if (params?.after) sp.set('after', params.after);
     if (params?.before) sp.set('before', params.before);
-    canonical = `/blog?${sp.toString()}`;
+    canonical = `/blog/?${sp.toString()}`;
   }
 
   return {
@@ -69,7 +69,7 @@ function buildPageLink(params: BlogSearchParams): string {
   if (params.after) sp.set('after', params.after);
   if (params.before) sp.set('before', params.before);
   const qs = sp.toString();
-  return qs ? `/blog?${qs}` : '/blog';
+  return qs ? `/blog/?${qs}` : '/blog/';
 }
 
 export default async function BlogPage({
@@ -203,7 +203,7 @@ export default async function BlogPage({
                 : '아직 작성된 글이 없습니다.'}
             </p>
             {!fetchFailed && isFiltering && (
-              <Link href="/blog" className="btn btn-outline">
+              <Link href="/blog/" className="btn btn-outline">
                 전체 목록으로 돌아가기
               </Link>
             )}

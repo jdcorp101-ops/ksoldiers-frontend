@@ -253,7 +253,7 @@ export default function DraftForm({ categories }: { categories: WPCategory[] }) 
                 <ul style={{ marginTop: 8, paddingLeft: 20 }}>
                   {result.preview.internalLinks.map((lnk, i) => (
                     <li key={i} style={{ marginBottom: 6 }}>
-                      <a href={`/blog/${lnk.targetSlug}`} target="_blank" rel="noopener noreferrer">
+                      <a href={`/blog/${lnk.targetSlug}/`} target="_blank" rel="noopener noreferrer">
                         {lnk.anchorText}
                       </a>{' '}
                       <span style={{ color: '#888' }}>— /{lnk.targetSlug}</span>

@@ -78,7 +78,7 @@ const DRAFT_TOOL: Anthropic.Messages.Tool = {
       },
       internalLinks: {
         type: 'array',
-        description: '사용자 메시지에 제공된 [기존 글 목록] 중 본문에 자연스럽게 링크한 글들. 본문 contentHtml에는 이미 <a href="/blog/{슬러그}">앵커</a> 형태로 삽입돼 있어야 한다. 여기서는 사용한 링크만 보고용으로 다시 나열.',
+        description: '사용자 메시지에 제공된 [기존 글 목록] 중 본문에 자연스럽게 링크한 글들. 본문 contentHtml에는 이미 <a href="/blog/{슬러그}/">앵커</a> 형태로 삽입돼 있어야 한다. 여기서는 사용한 링크만 보고용으로 다시 나열.',
         items: {
           type: 'object',
           properties: {
@@ -131,7 +131,7 @@ function buildUserMessage({ keyword, categoryHint, intent, serpContext, existing
   }
   if (existingPosts && existingPosts.length > 0) {
     lines.push('', '[기존 글 목록 — 내부 링킹 후보]');
-    lines.push('아래 글들 중 이번 본문 주제와 자연스럽게 연결되는 1~3개를 본문에 <a href="/blog/{슬러그}">앵커</a> 형태로 삽입하라. 억지로 끼우지 말고, 정말 도움될 때만.');
+    lines.push('아래 글들 중 이번 본문 주제와 자연스럽게 연결되는 1~3개를 본문에 <a href="/blog/{슬러그}/">앵커</a> 형태로 삽입하라. 억지로 끼우지 말고, 정말 도움될 때만.');
     for (const p of existingPosts) {
       const cat = p.categorySlug ? ` [${p.categorySlug}]` : '';
       const summary = p.excerpt ? ` — ${p.excerpt}` : '';

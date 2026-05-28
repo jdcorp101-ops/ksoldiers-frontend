@@ -4,7 +4,7 @@
 export const metadata = {
   title: 'About',
   description: 'ksoldiers는 입영부터 전역까지 필요한 군 생활 정보를 정리하는 블로그입니다.',
-  alternates: { canonical: '/about' },
+  alternates: { canonical: '/about/' },
 };
 
 export default function AboutPage() {

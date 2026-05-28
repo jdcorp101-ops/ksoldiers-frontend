@@ -23,7 +23,7 @@ export function HomeSidebar({
         {categories.map((cat) => (
           <li key={cat.slug}>
             <Link
-              href={`/blog/category/${cat.slug}`}
+              href={`/blog/category/${cat.slug}/`}
               className={`m-sidebar-item${currentSlug === cat.slug ? ' active' : ''}`}
             >
               {cat.name}
@@ -44,7 +44,7 @@ export function HomeTabs({ categories }: { categories: WPCategory[] }) {
       {categories.map((cat) => (
         <Link
           key={cat.slug}
-          href={`/blog/category/${cat.slug}`}
+          href={`/blog/category/${cat.slug}/`}
           className="m-tab"
         >
           {cat.name}

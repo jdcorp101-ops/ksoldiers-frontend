@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: { params: Params }) {
     post.seo?.metaDesc ||
     (cleanExcerpt ? truncateAtBoundary(cleanExcerpt, 160) : `${post.title} - ksoldiers 군 생활 블로그`);
   const imageUrl = post.featuredImage?.node?.sourceUrl;
-  const url = `/blog/${slug}`;
+  const url = `/blog/${slug}/`;
   const modifiedTime = post.modified || post.date;
 
   return {
@@ -198,7 +198,7 @@ export default async function SinglePostPage({ params }: { params: Params }) {
 
           <header className="single-post-header">
             {category && (
-              <Link href={`/blog/category/${category.slug}`} className="single-post-badge">
+              <Link href={`/blog/category/${category.slug}/`} className="single-post-badge">
                 {category.name}
               </Link>
             )}

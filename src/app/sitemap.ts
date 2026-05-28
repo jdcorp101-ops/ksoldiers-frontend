@@ -12,9 +12,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'daily', priority: 1.0 },
-    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${SITE_URL}/blog/`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/about/`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE_URL}/contact/`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
   try {
@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
 
     const postRoutes: MetadataRoute.Sitemap = (data?.posts?.nodes || []).map((post) => ({
-      url: `${SITE_URL}/blog/${post.slug}`,
+      url: `${SITE_URL}/blog/${post.slug}/`,
       lastModified: new Date(post.modified || post.date),
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const categoryRoutes: MetadataRoute.Sitemap = (data?.categories?.nodes || [])
       .filter(isPublicCategory)
       .map((cat) => ({
-        url: `${SITE_URL}/blog/category/${cat.slug}`,
+        url: `${SITE_URL}/blog/category/${cat.slug}/`,
         lastModified: now,
         changeFrequency: 'weekly',
         priority: 0.6,
