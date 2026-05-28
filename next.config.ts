@@ -27,21 +27,6 @@ const nextConfig: NextConfig = {
     ],
     qualities: [75, 90],
   },
-  async rewrites() {
-    return [
-      // 옛 글 본문에 박힌 `<img src="https://ksoldiers.com/wp-content/...">` 같은
-      // WP 자산 경로를 Vercel이 자동으로 WP 백엔드(gigun0.mycafe24.com)에서 프록시.
-      // 영구 픽스(WP DB 치환)가 끝나면 이 규칙은 제거 가능.
-      {
-        source: '/wp-content/:path*',
-        destination: 'https://gigun0.mycafe24.com/wp-content/:path*',
-      },
-      {
-        source: '/wp-includes/:path*',
-        destination: 'https://gigun0.mycafe24.com/wp-includes/:path*',
-      },
-    ];
-  },
   async headers() {
     return [
       // staging/vercel.app 도메인에서만 noindex — ksoldiers.com 본도메인은 영향 없음.
