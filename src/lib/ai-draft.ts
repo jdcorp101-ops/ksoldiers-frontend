@@ -1,10 +1,5 @@
-// TODO(ksoldiers): 이 파일은 wedmo에서 그대로 가져온 상태.
-//   - 도구 이름(submit_wedding_draft), description, generateWeddingPost 함수명,
-//     user 메시지의 "Wedmo 블로그 초안" 문구를 ksoldiers용으로 정리.
-//   - 슬러그 정책: ksoldiers는 한글 슬러그 운영이므로 slug normalize 로직(라인 ~193) 재검토 필요
-//     (현재는 영문 a-z0-9-만 허용 → 한글 슬러그 제거됨).
 import Anthropic from '@anthropic-ai/sdk';
-import { WEDDING_DRAFT_SYSTEM_PROMPT } from './prompts/ksoldiers-seo-draft';
+import { KSOLDIERS_DRAFT_SYSTEM_PROMPT } from './prompts/ksoldiers-seo-draft';
 import type { WPPostSummary } from './wp';
 
 const MODEL = 'claude-sonnet-4-6';
@@ -51,18 +46,18 @@ export type DraftOutput = {
 };
 
 const DRAFT_TOOL: Anthropic.Messages.Tool = {
-  name: 'submit_wedding_draft',
-  description: 'Wedmo 블로그 글 초안을 구조화된 형태로 제출. 모든 필수 필드를 채워서 호출.',
+  name: 'submit_ksoldiers_draft',
+  description: 'ksoldiers 블로그 글 초안을 구조화된 형태로 제출. 모든 필수 필드를 채워서 호출.',
   input_schema: {
     type: 'object',
     properties: {
       title: { type: 'string', description: '한국어 제목, 30~50자 권장' },
-      slug: { type: 'string', description: '영문 슬러그 (소문자 + 하이픈, 5~7단어)' },
+      slug: { type: 'string', description: '한국어 슬러그 (핵심 키워드 + 하이픈, 5~7단어)' },
       excerpt: { type: 'string', description: '1~2문장 요약, 80~140자' },
       contentHtml: { type: 'string', description: '본문 HTML (시맨틱 태그만)' },
       seoTitle: { type: 'string', description: '검색 결과용 제목, 50~60자' },
       seoDesc: { type: 'string', description: '메타 디스크립션, 120~155자 (메인 키워드 원형 포함)' },
-      suggestedCategorySlug: { type: 'string', description: '한국어 또는 영문 카테고리 슬러그 추정값' },
+      suggestedCategorySlug: { type: 'string', description: '영문 카테고리 슬러그: training-camp / military-rules / military-life-gear / blog 중 하나' },
       imageSuggestions: {
         type: 'array',
         description: '본문에 이미지를 넣으면 좋을 위치·alt 텍스트·캡션 제안 2~3개. 작성자가 워드프레스에서 직접 첨부할 때 참고용.',
@@ -138,7 +133,7 @@ function buildUserMessage({ keyword, categoryHint, intent, serpContext, existing
       lines.push(`- slug: ${p.slug}${cat} | "${p.title}"${summary}`);
     }
   }
-  lines.push('', '위 정보를 기반으로 Wedmo 블로그 초안 1편을 submit_wedding_draft 도구로 제출하세요.');
+  lines.push('', '위 정보를 기반으로 ksoldiers 블로그 초안 1편을 submit_ksoldiers_draft 도구로 제출하세요.');
   return lines.join('\n');
 }
 
@@ -195,7 +190,7 @@ function normalizeDraft(raw: unknown): DraftOutput {
   }
   return {
     title: (obj.title as string).trim(),
-    slug: (obj.slug as string).trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''),
+    slug: (obj.slug as string).trim().toLowerCase().replace(/[^a-z0-9가-힣-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''),
     excerpt: (obj.excerpt as string).trim(),
     contentHtml: (obj.contentHtml as string).trim(),
     seoTitle: (obj.seoTitle as string).trim(),
@@ -230,7 +225,7 @@ export function appendFaqSchemaToHtml(contentHtml: string, faqItems: FaqItem[]):
   return `${contentHtml}\n${jsonLd}`;
 }
 
-export async function generateWeddingPost(input: DraftInput): Promise<DraftOutput> {
+export async function generateKsoldiersPost(input: DraftInput): Promise<DraftOutput> {
   const client = getClient();
   const res = await client.messages.create({
     model: MODEL,
@@ -238,12 +233,12 @@ export async function generateWeddingPost(input: DraftInput): Promise<DraftOutpu
     system: [
       {
         type: 'text',
-        text: WEDDING_DRAFT_SYSTEM_PROMPT,
+        text: KSOLDIERS_DRAFT_SYSTEM_PROMPT,
         cache_control: { type: 'ephemeral' },
       },
     ],
     tools: [DRAFT_TOOL],
-    tool_choice: { type: 'tool', name: 'submit_wedding_draft' },
+    tool_choice: { type: 'tool', name: 'submit_ksoldiers_draft' },
     messages: [
       { role: 'user', content: buildUserMessage(input) },
     ],

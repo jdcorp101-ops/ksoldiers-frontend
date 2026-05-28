@@ -1,5 +1,3 @@
-// TODO(ksoldiers): REVIEW_SYSTEM_PROMPT가 "한국 웨딩 콘텐츠 SEO 전문 리뷰어 / Wedmo" 기준으로 작성됨.
-//   ksoldiers(군 생활 가이드) 콘텐츠 평가 기준에 맞게 시스템 프롬프트 전반을 다시 작성 필요.
 import Anthropic from '@anthropic-ai/sdk';
 
 const MODEL = 'claude-sonnet-4-6';
@@ -28,7 +26,7 @@ export type ReviewOutput = {
   topImprovements: ReviewImprovement[];
 };
 
-const REVIEW_SYSTEM_PROMPT = `당신은 한국 웨딩 콘텐츠 SEO 전문 리뷰어다. Wedmo(wedmo.kr) 블로그 글 초안을 받아 SEO·가독성·신뢰도 관점에서 평가하고 개선점을 제시한다.
+const REVIEW_SYSTEM_PROMPT = `당신은 한국 군 생활 콘텐츠 SEO 전문 리뷰어다. ksoldiers(ksoldiers.com) 블로그 글 초안을 받아 SEO·가독성·신뢰도 관점에서 평가하고 개선점을 제시한다.
 
 [평가 기준]
 
@@ -46,9 +44,10 @@ SEO (0~100점):
 
 신뢰도 (0~100점):
 - 추상적 일반론(보통, 많이, 대부분)이 구체 범위·수치로 치환됐는지
-- 가짜 인용·가짜 통계·가짜 인터뷰가 있는지 (있으면 큰 감점)
-- 한국 결혼시장 특유 맥락(스드메, 본식 스냅, 예단·예물)이 반영됐는지
-- 광고 표현(최고, 무조건, 강력 추천)이 있는지 (있으면 감점)
+- 가짜 인용·가짜 통계·가짜 인터뷰·임의 부대명·임의 인물명이 있는지 (있으면 큰 감점)
+- 한국 군 복무 특유 맥락(훈련소 5주 체계·자대·일과·외박·휴가·면회·PX·보직 분류 등)이 반영됐는지
+- 규정 관련 내용에 "2026년 기준" 같은 시점 표기가 있는지 (없으면 감점)
+- 광고/과장 표현(최고, 무조건, 강력 추천)이나 자극적·마초적 표현(진짜 남자, 꿀빨기 등)이 있는지 (있으면 감점)
 
 [출력 규칙]
 - 반드시 submit_draft_review 도구를 호출해 평가 결과를 제출한다.
@@ -58,7 +57,7 @@ SEO (0~100점):
 
 const REVIEW_TOOL: Anthropic.Messages.Tool = {
   name: 'submit_draft_review',
-  description: 'Wedmo 블로그 초안 평가 결과 제출.',
+  description: 'ksoldiers 블로그 초안 평가 결과 제출.',
   input_schema: {
     type: 'object',
     properties: {
@@ -122,7 +121,7 @@ function normalizeReview(raw: unknown): ReviewOutput {
   };
 }
 
-export async function reviewWeddingDraft(input: ReviewInput): Promise<ReviewOutput> {
+export async function reviewKsoldiersDraft(input: ReviewInput): Promise<ReviewOutput> {
   const client = getClient();
   const userMessage = [
     `메인 키워드: ${input.keyword}`,

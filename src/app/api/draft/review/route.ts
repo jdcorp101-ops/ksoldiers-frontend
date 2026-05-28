@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { ADMIN_COOKIE_NAME, verifySessionToken, verifyAdminPassword } from '@/lib/admin-auth';
-import { reviewWeddingDraft } from '@/lib/ai-review';
+import { reviewKsoldiersDraft } from '@/lib/ai-review';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const review = await reviewWeddingDraft({ keyword, title, seoTitle, seoDesc, contentHtml });
+    const review = await reviewKsoldiersDraft({ keyword, title, seoTitle, seoDesc, contentHtml });
     return NextResponse.json({ ok: true, review });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);

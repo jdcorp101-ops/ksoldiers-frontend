@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { ADMIN_COOKIE_NAME, verifySessionToken, verifyAdminPassword } from '@/lib/admin-auth';
-import { generateWeddingPost, appendFaqSchemaToHtml, type DraftIntent } from '@/lib/ai-draft';
+import { generateKsoldiersPost, appendFaqSchemaToHtml, type DraftIntent } from '@/lib/ai-draft';
 import { createDraftPost } from '@/lib/wp-write';
 import { getRecentPostsForLinking } from '@/lib/wp';
 
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
   let draft;
   try {
-    draft = await generateWeddingPost({
+    draft = await generateKsoldiersPost({
       keyword,
       categoryHint: categorySlug,
       intent,
