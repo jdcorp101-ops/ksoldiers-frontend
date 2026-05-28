@@ -3,6 +3,36 @@ import { stripHtml } from './html';
 
 const WP_GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
 
+// 컷오버 직후 임시 픽스: 옛 글 본문 등 WP DB에 박힌 ksoldiers.com 자산 URL을
+// 새 WP 백엔드 호스트로 다시 쓴다. ksoldiers.com은 이제 Vercel을 가리키고
+// Vercel의 edge firewall이 /wp-content/* 경로를 자동 challenge하기 때문에
+// 브라우저가 이 URL로 가면 이미지 대신 HTML 챌린지 페이지를 받는다.
+// 영구 픽스는 WP DB 검색-치환(예: Better Search Replace 플러그인). 그 작업이
+// 끝나면 이 함수와 호출부 둘 다 제거 가능.
+const LEGACY_ASSET_PREFIX = 'https://ksoldiers.com/wp-';
+const NEW_ASSET_PREFIX = 'https://gigun0.mycafe24.com/wp-';
+
+function rewriteAssetHosts<T>(value: T): T {
+  if (typeof value === 'string') {
+    return (
+      value.includes(LEGACY_ASSET_PREFIX)
+        ? value.split(LEGACY_ASSET_PREFIX).join(NEW_ASSET_PREFIX)
+        : value
+    ) as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => rewriteAssetHosts(item)) as unknown as T;
+  }
+  if (value && typeof value === 'object') {
+    const result: Record<string, unknown> = {};
+    for (const key of Object.keys(value as Record<string, unknown>)) {
+      result[key] = rewriteAssetHosts((value as Record<string, unknown>)[key]);
+    }
+    return result as T;
+  }
+  return value;
+}
+
 export type WPCategory = {
   name: string;
   slug: string;
@@ -121,7 +151,7 @@ export async function fetchGraphQL<T = unknown>(
     throw new Error('GraphQL API 호출에 실패했습니다.');
   }
 
-  return json.data as T;
+  return rewriteAssetHosts(json.data as T);
 }
 
 export function isPublicCategory(c: { slug: string; count?: number | null }): boolean {
