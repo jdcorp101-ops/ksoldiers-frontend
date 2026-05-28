@@ -145,7 +145,7 @@ export default function DraftForm({ categories }: { categories: WPCategory[] }) 
             id="keyword"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="예: 야외 결혼식 장단점, 강남 스튜디오 가격대 비교"
+            placeholder="예: 훈련소 준비물, 군인 월급 인상 2026"
             disabled={isPending}
             maxLength={100}
             className="form-input"
@@ -179,7 +179,7 @@ export default function DraftForm({ categories }: { categories: WPCategory[] }) 
             value={serpContext}
             onChange={(e) => setSerpContext(e.target.value.slice(0, SERP_MAX_LEN))}
             disabled={isPending}
-            placeholder={`구글/네이버에서 키워드 검색 후 상위 3~5개 글의 제목+짧은 설명을 그대로 붙여넣기.\n비워두면 SERP 분석 없이 작성됩니다.\n\n예:\n1) 스몰웨딩 비용 정리 — 평균 800만~1500만 원...\n2) 하우스웨딩 후기 — 30명 기준 ...\n3) ...`}
+            placeholder={`구글/네이버에서 키워드 검색 후 상위 3~5개 글의 제목+짧은 설명을 그대로 붙여넣기.\n비워두면 SERP 분석 없이 작성됩니다.\n\n예:\n1) 훈련소 준비물 완벽 가이드 — 필수품·반입금지 정리...\n2) 입영 전 챙겨야 할 10가지 — 2026년 기준...\n3) ...`}
             rows={6}
             maxLength={SERP_MAX_LEN}
             className="form-input"
