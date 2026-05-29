@@ -38,6 +38,19 @@ const nextConfig: NextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
+      // 글 상세는 force-dynamic(캐시 태그 버그 우회)이라 기본적으로 매 요청 SSR이다.
+      // Next 데이터/라우트 캐시(x-next-cache-tags) 대신 CDN-Cache-Control로 Vercel
+      // 엣지에서만 캐싱해 성능(LCP/TTFB)·cafe24 부하를 회복한다. 한글 경로 태그 버그와
+      // 무관(이 헤더는 CDN 전용). /blog/category/*(2세그먼트)는 매칭 안 됨.
+      {
+        source: '/blog/:slug',
+        headers: [
+          {
+            key: 'CDN-Cache-Control',
+            value: 'public, s-maxage=600, stale-while-revalidate=86400',
+          },
+        ],
+      },
     ];
   },
   async redirects() {
@@ -60,7 +73,7 @@ const nextConfig: NextConfig = {
       // naver = 네이버 사이트 소유확인 파일(/naver….html)을 public에서 그대로
       // 서빙해야 하므로 리다이렉트 대상에서 제외.
       {
-        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|icon|apple-icon|robots|sitemap|naver)[^/]+)',
+        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|icon|apple-icon|opengraph-image|twitter-image|manifest|robots|sitemap|naver)[^/]+)',
         destination: '/blog/:slug/',
         statusCode: 301,
       },

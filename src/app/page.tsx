@@ -83,7 +83,7 @@ export default async function Home() {
 
         <HomeSection
           title="최신 글"
-          moreHref="/blog"
+          moreHref="/blog/"
           posts={posts.slice(0, POSTS_PER_SECTION)}
         />
 
@@ -91,7 +91,7 @@ export default async function Home() {
           <HomeSection
             key={cat.slug}
             title={cat.name}
-            moreHref={`/blog/category/${cat.slug}`}
+            moreHref={`/blog/category/${cat.slug}/`}
             posts={postsByCategory.get(cat.slug) ?? []}
           />
         ))}
