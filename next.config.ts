@@ -43,23 +43,26 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       // WP /category/<en>/ → 새 구조 /blog/category/<en>/
+      // 네이버 Yeti는 308보다 301을 안정적으로 처리하므로 statusCode: 301 사용.
       {
         source: '/category/:slug',
         destination: '/blog/category/:slug/',
-        permanent: true,
+        statusCode: 301,
       },
       // WP /author/<name>/ → /about/ (운영자 1인이라 동일 의미)
       {
         source: '/author/:slug',
         destination: '/about/',
-        permanent: true,
+        statusCode: 301,
       },
       // WP 플랫 글 URL /<한글슬러그>/ → /blog/<한글슬러그>/
       // 알려진 정적 경로·시스템 경로·정적 파일은 제외 (negative lookahead).
+      // naver = 네이버 사이트 소유확인 파일(/naver….html)을 public에서 그대로
+      // 서빙해야 하므로 리다이렉트 대상에서 제외.
       {
-        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|robots|sitemap)[^/]+)',
+        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|robots|sitemap|naver)[^/]+)',
         destination: '/blog/:slug/',
-        permanent: true,
+        statusCode: 301,
       },
     ];
   },
