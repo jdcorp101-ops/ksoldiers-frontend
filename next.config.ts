@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
       // naver = 네이버 사이트 소유확인 파일(/naver….html)을 public에서 그대로
       // 서빙해야 하므로 리다이렉트 대상에서 제외.
       {
-        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|icon|apple-icon|opengraph-image|twitter-image|manifest|robots|sitemap|naver)[^/]+)',
+        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|icon|apple-icon|opengraph-image|twitter-image|manifest|robots|sitemap|feed|naver)[^/]+)',
         destination: '/blog/:slug/',
         statusCode: 301,
       },

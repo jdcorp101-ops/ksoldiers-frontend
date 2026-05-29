@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     template: "%s | ksoldiers",
   },
   description: SITE_DESCRIPTION,
+  alternates: {
+    types: { "application/rss+xml": "/feed/" },
+  },
   openGraph: {
     type: "website",
     locale: "ko_KR",
