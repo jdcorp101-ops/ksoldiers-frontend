@@ -183,7 +183,13 @@ export const getPostBySlug = cache(async (rawSlug: string): Promise<WPPost | nul
         seo { title metaDesc }
       }
     }
-  `, { id: slug }, { tags: ['posts', `post:${slug}`] });
+  `,
+    { id: slug },
+    // 캐시 태그는 ASCII여야 한다: Vercel Data Cache가 태그를 헤더로 인코딩하는데
+    // 한글 등 non-ASCII slug는 ByteString 변환에서 throw → on-demand 렌더 500.
+    // percent-encode해서 ASCII로 만든다. 외부에서 이 태그로 revalidate할 땐
+    // 동일하게 encodeURIComponent(slug)로 맞출 것.
+    { tags: ['posts', `post:${encodeURIComponent(slug)}`] });
 
   return data?.post ?? null;
 });
