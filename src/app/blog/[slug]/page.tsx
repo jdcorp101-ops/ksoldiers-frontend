@@ -1,7 +1,6 @@
 import { cache } from 'react';
 import {
   fetchGraphQL,
-  getAllPostSlugs,
   getCategories,
   getPostBySlug,
   POST_CARD_FRAGMENT,
@@ -25,9 +24,16 @@ import { extractToc } from '@/lib/toc';
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  return await getAllPostSlugs();
-}
+// 한글 슬러그 글은 동적 렌더로 처리한다.
+// Next 16은 페이지를 캐시할 때 요청 경로(pathname)를 그대로 캐시 태그로 추가하는데
+// (server/lib/implicit-tags.ts), 이 태그가 x-next-cache-tags HTTP 헤더로 나간다.
+// 한글 등 non-ASCII 경로는 헤더에서 ERR_INVALID_CHAR로 throw → on-demand 렌더 500.
+// force-dynamic + force-no-store로 이 라우트의 풀라우트/데이터 캐시를 끄면
+// 캐시 태그 헤더 자체가 생성되지 않아 문제를 우회한다. (홈/목록/카테고리는 경로가
+// 영문이라 영향 없음.) 매 요청 SSR이므로 함수 리전을 백엔드와 같은 icn1로 고정해
+// 지연을 줄인다(vercel.json).
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 const getRelatedPosts = cache(async (categorySlug: string, excludeSlug: string): Promise<WPPost[]> => {
   try {
