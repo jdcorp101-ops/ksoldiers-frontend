@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { fetchGraphQL, isPublicCategory, type WPPosts, type WPCategories } from '@/lib/wp';
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, MIGRATION_DATE } from '@/lib/site';
 
 type SitemapData = {
   posts: WPPosts;
@@ -40,12 +40,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { tags: ['posts', 'categories'] }
     );
 
-    const postRoutes: MetadataRoute.Sitemap = (data?.posts?.nodes || []).map((post) => ({
-      url: `${SITE_URL}/blog/${post.slug}/`,
-      lastModified: new Date(post.modified || post.date),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    }));
+    const postRoutes: MetadataRoute.Sitemap = (data?.posts?.nodes || []).map((post) => {
+      const modified = new Date(post.modified || post.date);
+      return {
+        url: `${SITE_URL}/blog/${post.slug}/`,
+        // 컷오버로 URL·렌더링이 바뀐 글들은 modified가 그 이전이라 재크롤 신호가
+        // 약하다. 최소 컷오버 시점으로 끌어올린다(실제 수정이 더 최신이면 그대로).
+        lastModified: modified > MIGRATION_DATE ? modified : MIGRATION_DATE,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      };
+    });
 
     const categoryRoutes: MetadataRoute.Sitemap = (data?.categories?.nodes || [])
       .filter(isPublicCategory)
