@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import {
   fetchGraphQL,
+  getAllPostSlugs,
   getCategories,
   getPostBySlug,
   POST_CARD_FRAGMENT,
@@ -24,16 +25,24 @@ import { extractToc } from '@/lib/toc';
 
 type Params = Promise<{ slug: string }>;
 
-// 한글 슬러그 글은 동적 렌더로 처리한다.
-// Next 16은 페이지를 캐시할 때 요청 경로(pathname)를 그대로 캐시 태그로 추가하는데
-// (server/lib/implicit-tags.ts), 이 태그가 x-next-cache-tags HTTP 헤더로 나간다.
-// 한글 등 non-ASCII 경로는 헤더에서 ERR_INVALID_CHAR로 throw → on-demand 렌더 500.
-// force-dynamic + force-no-store로 이 라우트의 풀라우트/데이터 캐시를 끄면
-// 캐시 태그 헤더 자체가 생성되지 않아 문제를 우회한다. (홈/목록/카테고리는 경로가
-// 영문이라 영향 없음.) 매 요청 SSR이므로 함수 리전을 백엔드와 같은 icn1로 고정해
-// 지연을 줄인다(vercel.json).
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+// 글 상세는 빌드 타임에 전부 정적 생성(SSG)한다 — 각 글이 안정적 정적 페이지로
+// 남아야 네이버가 글 단위로 색인을 누적·유지한다(허브/신규글만 노출되던 문제 해결).
+//
+// 한글 슬러그 주의: Next 16은 페이지를 캐시할 때 요청 경로(pathname)를 암시적 캐시
+// 태그로 추가하고, 이 태그가 x-next-cache-tags 헤더로 나간다(server/lib/implicit-tags.ts).
+// non-ASCII 경로는 헤더에서 ERR_INVALID_CHAR로 throw → "on-demand 렌더"가 500이 된다.
+// 따라서 on-demand 렌더 경로를 아예 막는다:
+//   - dynamicParams = false → 빌드 목록에 없는 슬러그는 404(런타임 렌더 안 함)
+//   - revalidate = false   → 시간 기반 ISR 재생성도 끔(런타임 렌더 안 함)
+// 즉 글 페이지는 오직 빌드 시점에만 렌더된다. 신규글/수정은 WP 발행 웹훅이 Vercel
+// Deploy Hook(재빌드)을 트리거해 반영한다(발행→노출 수 분 지연 허용).
+// (데이터 캐시 태그 post:<slug>는 wp.ts에서 이미 encodeURIComponent로 ASCII화함.)
+export const dynamicParams = false;
+export const revalidate = false;
+
+export async function generateStaticParams() {
+  return await getAllPostSlugs();
+}
 
 const getRelatedPosts = cache(async (categorySlug: string, excludeSlug: string): Promise<WPPost[]> => {
   try {

@@ -38,19 +38,6 @@ const nextConfig: NextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
-      // 글 상세는 force-dynamic(캐시 태그 버그 우회)이라 기본적으로 매 요청 SSR이다.
-      // Next 데이터/라우트 캐시(x-next-cache-tags) 대신 CDN-Cache-Control로 Vercel
-      // 엣지에서만 캐싱해 성능(LCP/TTFB)·cafe24 부하를 회복한다. 한글 경로 태그 버그와
-      // 무관(이 헤더는 CDN 전용). /blog/category/*(2세그먼트)는 매칭 안 됨.
-      {
-        source: '/blog/:slug',
-        headers: [
-          {
-            key: 'CDN-Cache-Control',
-            value: 'public, s-maxage=600, stale-while-revalidate=86400',
-          },
-        ],
-      },
     ];
   },
   async redirects() {
