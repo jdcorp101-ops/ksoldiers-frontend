@@ -41,7 +41,20 @@ export const dynamicParams = false;
 export const revalidate = false;
 
 export async function generateStaticParams() {
-  return await getAllPostSlugs();
+  const slugs = await getAllPostSlugs();
+  // dynamicParams=false라 이 목록이 곧 "서빙되는 글 전체"다. 빌드 중 WP(cafe24)가
+  // 타임아웃/장애면 getAllPostSlugs가 []를 반환하는데, 그대로 두면 전 글이 404인 채
+  // "빌드 성공"으로 배포돼 사이트 전체가 죽는다. 0개는 정상 상태가 아니므로 빌드를
+  // 실패시켜 Vercel이 마지막 정상 배포를 유지하게 한다.
+  //
+  // 단 프로덕션에서만 막는다: 프리뷰/로컬은 WP env가 없어 정상적으로 0개가 나올 수
+  // 있고, 거기서까지 빌드를 깨면 모든 PR 프리뷰가 실패한다. 보호가 필요한 건 라이브.
+  if (slugs.length === 0 && process.env.VERCEL_ENV === 'production') {
+    throw new Error(
+      'generateStaticParams: 프로덕션 빌드에서 글 슬러그 0개. WP fetch 실패로 추정 — 전 글 404 배포를 막기 위해 빌드를 중단한다.'
+    );
+  }
+  return slugs;
 }
 
 const getRelatedPosts = cache(async (categorySlug: string, excludeSlug: string): Promise<WPPost[]> => {
