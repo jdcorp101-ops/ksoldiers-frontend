@@ -1,7 +1,15 @@
+import { timingSafeEqual } from 'node:crypto';
 import { revalidateTag } from 'next/cache';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
+
+function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
 
 type RevalidateBody = {
   tag?: string;
@@ -16,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   const header = req.headers.get('authorization') ?? '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : req.nextUrl.searchParams.get('secret');
-  if (token !== secret) {
+  if (!token || !safeEqual(token, secret)) {
     return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 });
   }
 

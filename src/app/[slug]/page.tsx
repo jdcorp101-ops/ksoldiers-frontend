@@ -18,7 +18,7 @@ import TableOfContents from '@/components/TableOfContents';
 import ReadingProgress from '@/components/ReadingProgress';
 import { HomeSidebar } from '@/components/home/HomeCategoryNav';
 import { SITE_URL } from '@/lib/site';
-import { stripHtml, truncateAtBoundary, optimizeContentImages } from '@/lib/html';
+import { stripHtml, truncateAtBoundary, optimizeContentImages, rewriteLegacyBlogLinks } from '@/lib/html';
 import { buildBreadcrumb } from '@/lib/breadcrumb';
 import { isRecent, readingMinutes } from '@/lib/date';
 import { extractToc } from '@/lib/toc';
@@ -145,7 +145,7 @@ export default async function SinglePostPage({ params }: { params: Params }) {
   ]);
 
   const { html: tocHtml, toc } = extractToc(post.content ?? '');
-  const bodyHtml = optimizeContentImages(tocHtml);
+  const bodyHtml = rewriteLegacyBlogLinks(optimizeContentImages(tocHtml));
   const readMinutes = readingMinutes(post.content ?? '');
 
   const articleExcerpt = stripHtml(post.excerpt);
