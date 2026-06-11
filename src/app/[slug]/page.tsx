@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: { params: Params }) {
     post.seo?.metaDesc ||
     (cleanExcerpt ? truncateAtBoundary(cleanExcerpt, 160) : `${post.title} - ksoldiers 군 생활 블로그`);
   const imageUrl = post.featuredImage?.node?.sourceUrl;
-  const url = `/blog/${slug}/`;
+  const url = `/${slug}/`;
   const modifiedTime = post.modified || post.date;
 
   return {
@@ -165,7 +165,7 @@ export default async function SinglePostPage({ params }: { params: Params }) {
     publisher: { '@type': 'Organization', name: 'ksoldiers', url: SITE_URL },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${SITE_URL}/blog/${slug}/`,
+      '@id': `${SITE_URL}/${slug}/`,
     },
     ...(post.featuredImage?.node?.sourceUrl
       ? { image: [post.featuredImage.node.sourceUrl] }
@@ -177,9 +177,9 @@ export default async function SinglePostPage({ params }: { params: Params }) {
     { name: '홈', path: '/' },
     { name: '블로그', path: '/blog/' },
     ...(category
-      ? [{ name: category.name, path: `/blog/category/${category.slug}/` }]
+      ? [{ name: category.name, path: `/category/${category.slug}/` }]
       : []),
-    { name: post.title, path: `/blog/${slug}/` },
+    { name: post.title, path: `/${slug}/` },
   ]);
 
   return (
@@ -227,7 +227,7 @@ export default async function SinglePostPage({ params }: { params: Params }) {
 
           <header className="single-post-header">
             {category && (
-              <Link href={`/blog/category/${category.slug}/`} className="single-post-badge">
+              <Link href={`/category/${category.slug}/`} className="single-post-badge">
                 {category.name}
               </Link>
             )}

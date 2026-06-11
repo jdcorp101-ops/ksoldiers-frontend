@@ -91,7 +91,7 @@ export default async function Home() {
           <HomeSection
             key={cat.slug}
             title={cat.name}
-            moreHref={`/blog/category/${cat.slug}/`}
+            moreHref={`/category/${cat.slug}/`}
             posts={postsByCategory.get(cat.slug) ?? []}
           />
         ))}

@@ -96,7 +96,7 @@ const getCategoryData = cache(async (
 });
 
 function buildCanonical(slug: string, after: string, before: string): string {
-  const base = `/blog/category/${slug}/`;
+  const base = `/category/${slug}/`;
   if (!after && !before) return base;
   const sp = new URLSearchParams();
   if (after) sp.set('after', after);
@@ -168,16 +168,16 @@ export default async function CategoryPage({
   const cleanDesc = stripHtml(category.description);
 
   const prevLink = pageInfo?.hasPreviousPage && pageInfo.startCursor
-    ? `/blog/category/${slug}/?before=${pageInfo.startCursor}`
+    ? `/category/${slug}/?before=${pageInfo.startCursor}`
     : null;
   const nextLink = pageInfo?.hasNextPage && pageInfo.endCursor
-    ? `/blog/category/${slug}/?after=${pageInfo.endCursor}`
+    ? `/category/${slug}/?after=${pageInfo.endCursor}`
     : null;
 
   const { items: breadcrumbItems, schema: breadcrumbSchema } = buildBreadcrumb([
     { name: '홈', path: '/' },
     { name: '블로그', path: '/blog/' },
-    { name: category.name, path: `/blog/category/${slug}/` },
+    { name: category.name, path: `/category/${slug}/` },
   ]);
 
   const collectionSchema = {
@@ -186,7 +186,7 @@ export default async function CategoryPage({
     name: `${category.name} | ksoldiers`,
     description:
       cleanDesc || `ksoldiers의 ${category.name} 카테고리에 속한 모든 군 생활 정보.`,
-    url: `${SITE_URL}/blog/category/${slug}/`,
+    url: `${SITE_URL}/category/${slug}/`,
     inLanguage: 'ko-KR',
     isPartOf: { '@type': 'WebSite', name: 'ksoldiers', url: SITE_URL },
     mainEntity: {
@@ -195,7 +195,7 @@ export default async function CategoryPage({
       itemListElement: posts.map((p, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `${SITE_URL}/blog/${p.slug}`,
+        url: `${SITE_URL}/${p.slug}/`,
         name: p.title,
       })),
     },
