@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: '페이지를 찾을 수 없습니다 | ksoldiers',
+  // layout의 title 템플릿(%s | ksoldiers)이 접미사를 붙이므로 여기엔 제목만.
+  title: '페이지를 찾을 수 없습니다',
 };
 
 export default function NotFound() {

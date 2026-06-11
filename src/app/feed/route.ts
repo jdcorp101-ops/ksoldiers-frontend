@@ -1,4 +1,5 @@
 import { fetchGraphQL } from '@/lib/wp';
+import { rewriteLegacyBlogLinks } from '@/lib/html';
 import { SITE_URL, SITE_DESCRIPTION } from '@/lib/site';
 
 // 네이버 서치어드바이저에 등록된 RSS(/feed/) 대상. 옛 WordPress가 제공하던 주소를
@@ -67,7 +68,7 @@ export async function GET() {
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${rfc822(p.date)}</pubDate>${cat ? `\n      <category>${escapeXml(cat)}</category>` : ''}
       <description>${cdata(p.excerpt || '')}</description>
-      <content:encoded>${cdata(p.content || '')}</content:encoded>
+      <content:encoded>${cdata(rewriteLegacyBlogLinks(p.content || ''))}</content:encoded>
     </item>`;
     })
     .join('\n');

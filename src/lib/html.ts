@@ -42,6 +42,14 @@ export function optimizeContentImages(html: string | null | undefined): string {
   });
 }
 
+// 컷오버기(5/29~6/11)에 작성된 글 본문엔 내부링크가 /blog/<슬러그>/ 형식으로 남아 있다.
+// URL이 플랫 구조로 복원됐으므로 렌더 시점에 플랫으로 치환해 크롤러가 301 없이
+// 한 번에 따라가게 한다. /blog/(목록 자체)와 /blog/category/는 건드리지 않는다.
+export function rewriteLegacyBlogLinks(html: string | null | undefined): string {
+  if (!html) return '';
+  return html.replace(/href=(["'])\/blog\/(?!category\/)([^"']+)\1/gi, 'href=$1/$2$1');
+}
+
 // 문장부호·공백 경계에서 자르고, 잘렸으면 ellipsis. 메타 description 등 SEO 노출용.
 export function truncateAtBoundary(text: string, max: number): string {
   if (!text || text.length <= max) return text ?? '';
