@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -70,6 +71,9 @@ const websiteSchema = {
   },
 };
 
+// GA4 측정 ID는 Vercel 환경변수 NEXT_PUBLIC_GA_ID로 주입한다 (미설정 시 태그 미출력).
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,6 +97,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
       </body>
+      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
     </html>
   );
 }
