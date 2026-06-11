@@ -71,9 +71,6 @@ const websiteSchema = {
   },
 };
 
-// GA4 측정 ID는 Vercel 환경변수 NEXT_PUBLIC_GA_ID로 주입한다 (미설정 시 태그 미출력).
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -97,7 +94,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
       </body>
-      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+      <GoogleAnalytics gaId="G-55N5ZSEGP0" />
     </html>
   );
 }
