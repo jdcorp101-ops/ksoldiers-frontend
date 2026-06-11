@@ -59,7 +59,7 @@ export async function GET() {
   const lastBuild = posts[0]?.modified || posts[0]?.date;
   const items = posts
     .map((p) => {
-      const url = `${SITE_URL}/blog/${p.slug}/`;
+      const url = `${SITE_URL}/${p.slug}/`;
       const cat = p.categories?.nodes?.[0]?.name;
       return `    <item>
       <title>${escapeXml(p.title)}</title>

@@ -27,7 +27,7 @@ export default function BlogFilter({ categories }: { categories: WPCategory[] })
   };
 
   const handleCategoryChange = (slug: string) => {
-    router.push(slug ? `/blog/category/${slug}` : '/blog');
+    router.push(slug ? `/category/${slug}` : '/blog');
   };
 
   return (

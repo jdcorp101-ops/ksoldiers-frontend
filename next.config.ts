@@ -42,26 +42,27 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // WP /category/<en>/ → 새 구조 /blog/category/<en>/
+      // 글/카테고리 URL을 옛 WP 구조(/<슬러그>/, /category/<slug>/)로 복원했다.
+      // 네이버가 수개월간 색인·평가한 주소가 플랫 구조라, 301 승계에 기대지 않고
+      // 색인된 URL 자체를 다시 200으로 살리는 것이 가장 빠른 회복 경로.
       // 네이버 Yeti는 308보다 301을 안정적으로 처리하므로 statusCode: 301 사용.
+      //
+      // 컷오버기(5/29~6/11)에 수집됐을 수 있는 /blog/category/<slug>/ 회수.
       {
-        source: '/category/:slug',
-        destination: '/blog/category/:slug/',
+        source: '/blog/category/:slug',
+        destination: '/category/:slug/',
+        statusCode: 301,
+      },
+      // 컷오버기에 수집됐을 수 있는 /blog/<슬러그>/ 회수. /blog(목록)는 제외.
+      {
+        source: '/blog/:slug((?!category$)[^/]+)',
+        destination: '/:slug/',
         statusCode: 301,
       },
       // WP /author/<name>/ → /about/ (운영자 1인이라 동일 의미)
       {
         source: '/author/:slug',
         destination: '/about/',
-        statusCode: 301,
-      },
-      // WP 플랫 글 URL /<한글슬러그>/ → /blog/<한글슬러그>/
-      // 알려진 정적 경로·시스템 경로·정적 파일은 제외 (negative lookahead).
-      // naver = 네이버 사이트 소유확인 파일(/naver….html)을 public에서 그대로
-      // 서빙해야 하므로 리다이렉트 대상에서 제외.
-      {
-        source: '/:slug((?!about|blog|contact|category|author|admin|api|_next|favicon|icon|apple-icon|opengraph-image|twitter-image|manifest|robots|sitemap|feed|naver)[^/]+)',
-        destination: '/blog/:slug/',
         statusCode: 301,
       },
     ];
